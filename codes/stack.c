@@ -15,6 +15,7 @@ void push(stack *s, int value);
 void pop(stack *s);
 void peek(stack *s);
 void showFullStack(stack *s);
+int getValidChoice();
 
 int main() {
     stack s;
@@ -29,8 +30,8 @@ int main() {
         printf("3. Ver topo (Peek)\n");
         printf("4. Exibir pilha\n");
         printf("5. Sair\n");
-        printf("Opção: ");
-        scanf("%d", &choice);
+        
+        choice = getValidChoice();
 
         switch (choice) {
             case 1:
@@ -107,4 +108,21 @@ void showFullStack(stack *s) {
         printf("%d ", s->items[i]);
     }
     printf("\n");
+}
+
+int getValidChoice(){
+    int choice;
+    while(1){
+        printf("Opção: ");
+        if(scanf("%d", &choice) == 1){
+            if(choice >= 1 && choice <= 5){
+                return choice;
+            } else {
+                printf("Opção inválida! Tente novamente (Escolha entre 1 e 5).\n");
+            }
+        }else {
+            printf("A entrada deve ser somente de números entre 1 e 5!\n");
+            while(getchar() != '\n');
+        }
+    }
 }
