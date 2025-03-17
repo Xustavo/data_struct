@@ -1,8 +1,8 @@
 /*
-Considere uma lista contendo números inteiros positivos. Faça uma função que:
-Retorne quantos números pares existem na lista.  
-Retorne uma nova lista contendo apenas os números pares da lista.  
-Retorne a média da lista.
+Considere uma fila contendo números inteiros positivos. Faça uma função que:
+Retorne quantos números pares existem na fila.  
+Retorne uma nova fila contendo apenas os números pares da lista.  
+Retorne a média da fila.
 */
 
 #include <stdio.h>
