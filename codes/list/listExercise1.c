@@ -1,74 +1,147 @@
-/*
-Considere uma lista contendo números inteiros positivos. Faça uma função que:
-Retorne quantos números pares existem na lista.  
-Retorne uma nova lista contendo apenas os números pares da lista.  
-Retorne a média da lista.
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct Node {
     int val;
-    Node* next;
-} node;
+    struct Node* next;
+} Node;
 
-struct *Node createNode(int data);
-void insertAtFirst(struct Node** head, int val);
-void insertAtEnd(struct Node** head, int val);
-void insertAtPosition(struct Node** head, int position, int val);
-void deleteAtFirst(struct Node** head);
-void deletAtEnd(struct Node** head);
-void deleteAtPosition(struct Node** head, int position);
-int evenNumbers(struct Node** head);
-struct *Node evenNumbersList(struct Node** head);
-float listAverage(struct Node** head);
-void printList(struct Node** head);
+Node* createNode(int data);
+void insertAtFirst(Node** head, int val);
+void insertAtEnd(Node** head, int val);
+void insertAtPosition(Node** head, int position, int val);
+void deleteAtFirst(Node** head);
+void deleteAtEnd(Node** head);
+void deleteAtPosition(Node** head, int position);
+int evenNumbers(Node** head);
+Node* evenNumbersList(Node** head);
+float listAverage(Node** head);
+void printList(Node** head);
 
-int main(){
+int main() {
+    Node* head = NULL;
+    int choice, value, position;
+    char input[100];
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Insert a value at the end\n");
+        printf("2. Insert a value at the beginning\n");
+        printf("3. Insert a value at a specific position\n");
+        printf("4. Delete the first value\n");
+        printf("5. Delete the last value\n");
+        printf("6. Delete a value at a specific position\n");
+        printf("7. Count even numbers in the list\n");
+        printf("8. Display the even numbers list\n");
+        printf("9. Calculate the average of the list\n");
+        printf("10. Display the list\n");
+        printf("0. Exit\n");
+        printf("Enter your choice: ");
+        fgets(input, sizeof(input), stdin); 
+        choice = atoi(input);  
+        
+        switch (choice) {
+            case 1:
+                printf("Enter the value to insert at the end: ");
+                fgets(input, sizeof(input), stdin); 
+                value = atoi(input);  
+                insertAtEnd(&head, value);
+                break;
+            case 2:
+                printf("Enter the value to insert at the beginning: ");
+                fgets(input, sizeof(input), stdin);  
+                value = atoi(input);  
+                insertAtFirst(&head, value);
+                break;
+            case 3:
+                printf("Enter the position to insert the value: ");
+                fgets(input, sizeof(input), stdin);  
+                position = atoi(input);  
+                printf("Enter the value to insert: ");
+                fgets(input, sizeof(input), stdin);  
+                value = atoi(input);  
+                insertAtPosition(&head, position, value);
+                break;
+            case 4:
+                deleteAtFirst(&head);
+                break;
+            case 5:
+                deleteAtEnd(&head);
+                break;
+            case 6:
+                printf("Enter the position to delete: ");
+                fgets(input, sizeof(input), stdin);  
+                position = atoi(input);  
+                deleteAtPosition(&head, position);
+                break;
+            case 7:
+                printf("Even numbers count: %d\n", evenNumbers(&head));
+                break;
+            case 8:
+                {
+                    Node* evenList = evenNumbersList(&head);
+                    printf("Even numbers list: ");
+                    printList(&evenList);
+                }
+                break;
+            case 9:
+                printf("Average of the list: %.2f\n", listAverage(&head));
+                break;
+            case 10:
+                printf("Current list: ");
+                printList(&head);
+                break;
+            case 0:
+                printf("Exiting program...\n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 0);
 
     return 0;
 }
 
-struct *Node createNode(int data){
-    struct *Node newNode = (struct *Node)malloc(sizeof(struct Node));
-    newNode->data = data;
-    newNode->next = null;
-
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->val = data;
+    newNode->next = NULL;
     return newNode;
 }
 
-void insertAtFirst(struct Node** head, int val){
-    struct *Node newNode = createNode(val);
+void insertAtFirst(Node** head, int val) {
+    Node* newNode = createNode(val);
     newNode->next = *head;
     *head = newNode;
 }
 
-void insertAtEnd(struct Node** head, int val){
-    struct *Node newNode = createNode(val);
-    if(*head == NULL){
+void insertAtEnd(Node** head, int val) {
+    Node* newNode = createNode(val);
+    if (*head == NULL) {
         *head = newNode;
         return;
     }
-    struct *Node temp = *head;
-    while(temp->next != NULL){
+    Node* temp = *head;
+    while (temp->next != NULL) {
         temp = temp->next;
     }
     temp->next = newNode;
 }
 
-void insertAtPosition(struct Node** head, int position, int val){
-    struct *Node newNode = createNode(val);
-    if(position == 0){
+void insertAtPosition(Node** head, int position, int val) {
+    Node* newNode = createNode(val);
+    if (position == 0) {
         insertAtFirst(head, val);
+        return;
     }
-    struct *Node temp = *head;
-    for(int i = 0; temp != NULL && i < position -1; i++){
+    Node* temp = *head;
+    for (int i = 0; temp != NULL && i < position - 1; i++) {
         temp = temp->next;
     }
 
-    if(temp == NULL){
-        printf("Posição fora de alcance\n");
+    if (temp == NULL) {
+        printf("Position out of range\n");
         free(newNode);
         return;
     }
@@ -77,69 +150,69 @@ void insertAtPosition(struct Node** head, int position, int val){
     temp->next = newNode;
 }
 
-void deleteAtFirst(struct Node** head){
-    if(*head == NULL){
-        printf("A lista está vazia!\n");
+void deleteAtFirst(Node** head) {
+    if (*head == NULL) {
+        printf("The list is empty!\n");
         return;
     }
 
-    struct *Node temp = *head;
+    Node* temp = *head;
     *head = temp->next;
     free(temp);
 }
 
-void deletAtEnd(struct Node** head){
-    if(*head == null){
-        printf("A lista está vazia!\n");
+void deleteAtEnd(Node** head) {
+    if (*head == NULL) {
+        printf("The list is empty!\n");
         return;
     }
 
-    struct *Node temp = *head;
-    if(temp->next == NULL){
+    Node* temp = *head;
+    if (temp->next == NULL) {
         free(temp);
         *head = NULL;
         return;
     }
 
-    while(temp->next->next != NULL){
+    while (temp->next->next != NULL) {
         temp = temp->next;
     }
     free(temp->next);
     temp->next = NULL;
 }
 
-void deleteAtPosition(struct Node** head, int position){
+void deleteAtPosition(Node** head, int position) {
     if (*head == NULL) {
-        printf("A lista está vazia!\n");
+        printf("The list is empty!\n");
         return;
     }
-    struct Node* temp = *head;
+    Node* temp = *head;
     if (position == 0) {
-        deleteFromFirst(head);
+        deleteAtFirst(head);
         return;
     }
     for (int i = 0; temp != NULL && i < position - 1; i++) {
         temp = temp->next;
     }
     if (temp == NULL || temp->next == NULL) {
-        printf("Posição fora de alcance!\n");
+        printf("Position out of range!\n");
         return;
     }
-    struct Node* next = temp->next->next;
+    Node* next = temp->next->next;
     free(temp->next);
     temp->next = next;
 }
 
-int evenNumbers(struct Node** head){
-    if(*head == NULL){
-        printf("A lista está vazia!\n");
-        return;
+int evenNumbers(Node** head) {
+    if (*head == NULL) {
+        printf("The list is empty!\n");
+        return 0;
     }
     int count = 0;
-    struct *Node temp = *head;
+    Node* temp = *head;
 
-    while(temp != NULL){
-        if(temp->next %2 == 0){
+    while (temp != NULL) {
+        if (temp->val % 2 == 0) {
             count++;
         }
         temp = temp->next;
@@ -147,16 +220,16 @@ int evenNumbers(struct Node** head){
     return count;
 }
 
-struct *Node evenNumbersList(struct Node** head){
-    if(head == NULL){
-        printf("A lista está vazia!\n");
-        return;
+Node* evenNumbersList(Node** head) {
+    if (*head == NULL) {
+        printf("The list is empty!\n");
+        return NULL;
     }
-    struct Node* evenHead = NULL;  
-    struct Node* temp = head;
+    Node* evenHead = NULL;  
+    Node* temp = *head;
 
-    while(temp != NULL){
-        if(temp->next % 2 == 0){
+    while (temp != NULL) {
+        if (temp->val % 2 == 0) {
             insertAtEnd(&evenHead, temp->val);
         }
         temp = temp->next;
@@ -164,10 +237,10 @@ struct *Node evenNumbersList(struct Node** head){
     return evenHead;
 }
 
-float listAverage(struct Node** head){
+float listAverage(Node** head) {
     int sum = 0;
     int count = 0;
-    struct Node* temp = head;
+    Node* temp = *head;
     
     while (temp != NULL) {
         sum += temp->val;
@@ -182,10 +255,10 @@ float listAverage(struct Node** head){
     return (float)sum / count;
 }
 
-void printList(struct Node** head){
-    struct Node* temp = head;
+void printList(Node** head) {
+    Node* temp = *head;
     while (temp != NULL) {
-        printf("%d -> ", temp->data);
+        printf("%d -> ", temp->val);
         temp = temp->next;
     }
     printf("NULL\n");
